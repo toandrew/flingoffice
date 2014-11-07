@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyFlingOffice</string>
+    <string name="loading">正在加载文件，请稍候。。。</string>
+    <string name="no_recently_viewed_str">No recently viewed</string>
+    <string name="msg_http_connection_fail_str">连接服务器失败</string>
+    <string name="msg_http_connection_unknown_str">未知错误</string>
+    <string name="media_route_menu_title">Play on&#8230;</string>
+    <string name="msg_file_empty">请选择要投射的文件</string>
+    
+    <string name="button_up">上</string>
+    <string name="button_down">下</string>
+    <string name="button_next_page">下一页</string>
+    <string name="button_previous_page">前一页</string>
+    <string name="button_back">返回</string>
+    <string name="button_file_info">文件信息</string>
+    <string name="button_ok">确定</string>
+
+</resources>

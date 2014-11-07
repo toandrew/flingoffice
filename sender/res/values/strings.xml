@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MyFlingOffice</string>
+    <string name="loading">Loading, please wait...</string>
+
+    <string name="no_recently_viewed_str">No recently viewed</string>
+    <!-- Messages for http connection -->
+    <string name="msg_http_connection_fail_str">Connection Error</string>
+    <string name="msg_http_connection_unknown_str">Unknown Error</string>
+    
+    <string name="media_route_menu_title">Play on&#8230;</string>
+    
+    <string name="msg_file_empty">Sorry, Please select files to fling...</string>
+    
+    <string name="button_up">Up</string>
+    <string name="button_down">Down</string>
+    <string name="button_next_page">Next</string>
+    <string name="button_previous_page">Prev</string>
+    <string name="button_back">Back</string>
+    <string name="button_file_info">Info</string>
+    <string name="button_ok">OK</string>
+</resources>
