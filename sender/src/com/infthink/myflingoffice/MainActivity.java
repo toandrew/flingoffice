@@ -385,7 +385,7 @@ public class MainActivity extends ActionBarActivity {
             ApplicationMetadata appMetaData = result.getApplicationMetadata();
 
             if (status.isSuccess()) {
-                Log.d(TAG, "ConnectionResultCallback: " + appMetaData.getName());
+                Log.d(TAG, "ConnectionResultCallback: " + appMetaData.getData());
                 try {
                     Fling.FlingApi.setMessageReceivedCallbacks(mApiClient,
                             mOfficeChannel.getNamespace(), mOfficeChannel);
