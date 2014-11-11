@@ -60,8 +60,7 @@ import com.nanohttpd.webserver.src.main.java.fi.iki.elonen.SimpleWebServer;
 public class MainActivity extends ActionBarActivity {
     private static final String TAG = "MyFlingOffice";
 
-    private static final String APP_ID = Fling.FlingApi
-            .makeApplicationId("http://toandrew.github.io/demo/office/receiver/index.html");
+    private static final String APP_ID = "http://toandrew.github.io/demo/office/receiver/index.html";
 
     private static final int DEFAULT_PORT = 9012;
 
@@ -109,12 +108,15 @@ public class MainActivity extends ActionBarActivity {
 
         mContext = this;
 
+        String APPLICATION_ID = "~browser";
+        Fling.FlingApi.setApplicationId(APPLICATION_ID);
+        
         mOfficeChannel = new FlingOfficeChannel();
 
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
         mMediaRouteSelector = new MediaRouteSelector.Builder()
                 .addControlCategory(
-                        FlingMediaControlIntent.categoryForFling(APP_ID))
+                        FlingMediaControlIntent.categoryForFling(APPLICATION_ID))
                 .build();
 
         mMediaRouterCallback = new MediaRouterCallback();
