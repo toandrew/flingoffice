@@ -13,19 +13,45 @@ var fling = window.fling || {};
    * @constructor
    */
   function FlingOffice(board) {
+    var self = this;
+
     this.mBoard = board;
 
+
     console.log('********FlingOffice********');
-    this.flingReceiverManager_ = fling.receiver.FlingReceiverManager.getInstance();
-    this.flingMessageBus_ =
-        this.flingReceiverManager_.getFlingMessageBus(FlingOffice.PROTOCOL,
-        fling.receiver.FlingMessageBus.MessageType.JSON);
-    this.flingMessageBus_.onMessage = this.onMessage.bind(this);
-    this.flingReceiverManager_.onSenderConnected =
-        this.onSenderConnected.bind(this);
-    this.flingReceiverManager_.onSenderDisconnected =
-        this.onSenderDisconnected.bind(this);
-    this.flingReceiverManager_.start();
+
+    var channelId = guid();
+
+    this.receiverDaemon = new ReceiverDaemon("~browser");
+
+    var channel = this.receiverDaemon.createMessageChannel("ws");
+
+    //start Receiver Daemon
+    this.receiverDaemon.open();
+
+     /*
+      * Create MessageChannel Obejct
+      **/
+    channel.on("message", function(senderId, messageType, message) {
+        console.info("channel message ", senderId, messageType, message);
+         switch (messageType) {
+             case "senderConnected":
+             case "senderDisconnected":
+                break;
+             case "message":
+                var messageData = JSON.parse(message.data);
+                var namespace = messageData.namespace;
+                console.info("namespace:", namespace);
+                if (namespace == "urn:x-cast:com.infthink.cast.demo.office") {
+                    var data = JSON.parse(messageData.data);
+                    ("onMessage" in self)&&self.onMessage(senderId, data);
+                } else {
+                    console.info("3 namespace:", namespace);
+                }
+                break;
+         }
+
+    });
   }
 
   // Adds event listening functions to FlingOffice.prototype.
@@ -44,8 +70,7 @@ var fling = window.fling || {};
      * @param {event} event the sender connected event.
      */
     onSenderConnected: function(event) {
-        console.log('onSenderConnected. Total number of senders: ' +
-          this.flingReceiverManager_.getSenders().length);
+        console.log('onSenderConnected. Total number of senders: ');
     },
 
     /**
@@ -54,12 +79,7 @@ var fling = window.fling || {};
      * @param {event} event the sender disconnected event.
      */
     onSenderDisconnected: function(event) {
-        console.log('onSenderDisconnected. Total number of senders: ' +
-            this.flingReceiverManager_.getSenders().length);
-
-        if (this.flingReceiverManager_.getSenders().length == 0) {
-            window.close();
-        }
+        console.log('onSenderDisconnected. Total number of senders: ');
     },
 
     /**
@@ -67,10 +87,8 @@ var fling = window.fling || {};
      * choose function to call based on them.
      * @param {event} event the event to be processed.
      */
-    onMessage: function(event) {
-        var message = event.data;
-        var senderId = event.senderId;
-        console.log('********onMessage********' + JSON.stringify(event.data));
+    onMessage: function(senderId, message) {
+        console.log('********onMessage:' + message + " senderId:" + senderId);
 
         if (message.command == 'show') {
             this.onShow(senderId, message);

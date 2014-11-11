@@ -336,6 +336,14 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onApplicationDisconnected(int statusCode) {
             Log.d(TAG, "Cast.Listener.onApplicationDisconnected: " + statusCode);
+            
+            mSelectedDevice = null;
+            mMediaRouter.selectRoute(mMediaRouter.getDefaultRoute());
+            
+            if (mApiClient == null) {
+                return;
+            }
+            
             try {
                 Fling.FlingApi.removeMessageReceivedCallbacks(mApiClient,
                         mOfficeChannel.getNamespace());
