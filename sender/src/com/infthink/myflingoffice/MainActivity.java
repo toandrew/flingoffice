@@ -60,7 +60,7 @@ import com.nanohttpd.webserver.src.main.java.fi.iki.elonen.SimpleWebServer;
 public class MainActivity extends ActionBarActivity {
     private static final String TAG = "MyFlingOffice";
 
-    private static final String APP_ID = "http://toandrew.github.io/demo/office/receiver/index.html";
+    private static final String APP_ID = "http://toandrew.github.io/flingoffice/receiver/index.html";
 
     private static final int DEFAULT_PORT = 9012;
 
