@@ -97,6 +97,9 @@ public class MainActivity extends ActionBarActivity {
 
     private String mFileType = "";
 
+    private HttpCommunicateTask mQueryRequestTask;
+    private HttpCommunicateTask mSendFileTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,16 +111,16 @@ public class MainActivity extends ActionBarActivity {
 
         mContext = this;
 
-        String APPLICATION_ID = "~browser";
+        String APPLICATION_ID = "~flingoffice";
         Fling.FlingApi.setApplicationId(APPLICATION_ID);
-        
+
         mOfficeChannel = new FlingOfficeChannel();
 
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
         mMediaRouteSelector = new MediaRouteSelector.Builder()
                 .addControlCategory(
-                        FlingMediaControlIntent.categoryForFling(APPLICATION_ID))
-                .build();
+                        FlingMediaControlIntent
+                                .categoryForFling(APPLICATION_ID)).build();
 
         mMediaRouterCallback = new MediaRouterCallback();
         mFlingListener = new FlingListener();
@@ -193,6 +196,21 @@ public class MainActivity extends ActionBarActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            if (mQueryRequestTask != null) {
+                mQueryRequestTask.showdown();
+                mQueryRequestTask.cancel(true);
+                mQueryRequestTask = null;
+            }
+
+            if (mSendFileTask != null) {
+                mSendFileTask.showdown();
+                mSendFileTask.cancel(true);
+                mSendFileTask = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         super.onDestroy();
@@ -336,14 +354,14 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onApplicationDisconnected(int statusCode) {
             Log.d(TAG, "Cast.Listener.onApplicationDisconnected: " + statusCode);
-            
+
             mSelectedDevice = null;
             mMediaRouter.selectRoute(mMediaRouter.getDefaultRoute());
-            
+
             if (mApiClient == null) {
                 return;
             }
-            
+
             try {
                 Fling.FlingApi.removeMessageReceivedCallbacks(mApiClient,
                         mOfficeChannel.getNamespace());
@@ -544,8 +562,8 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        new HttpCommunicateTask(this, Utils.KEY_HTTP_BASE_URL, params,
-                new Handler() {
+        mQueryRequestTask = new HttpCommunicateTask(this,
+                Utils.KEY_HTTP_BASE_URL, params, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         int result = -1;
@@ -587,7 +605,9 @@ public class MainActivity extends ActionBarActivity {
                             break;
                         }
                     }
-                }).execute();
+                });
+
+        mQueryRequestTask.execute();
 
     }
 
@@ -607,8 +627,8 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        new HttpCommunicateTask(this, Utils.KEY_HTTP_BASE_URL, params,
-                new Handler() {
+        mSendFileTask = new HttpCommunicateTask(this, Utils.KEY_HTTP_BASE_URL,
+                params, new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
                         int result = -1;
@@ -687,7 +707,9 @@ public class MainActivity extends ActionBarActivity {
                             break;
                         }
                     }
-                }).execute();
+                });
+
+        mSendFileTask.execute();
 
     }
 

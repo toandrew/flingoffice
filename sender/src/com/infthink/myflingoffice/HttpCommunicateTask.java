@@ -34,6 +34,8 @@ public class HttpCommunicateTask extends AsyncTask<String, Integer, Integer> {
 
     private Context context;
 
+    private HttpClient httpclient;
+
     public HttpCommunicateTask(Context context, String httpUrl,
             List<NameValuePair> nameValues, Handler handler) {
         this.httpUrl = httpUrl;
@@ -42,10 +44,20 @@ public class HttpCommunicateTask extends AsyncTask<String, Integer, Integer> {
         this.context = context;
     }
 
+    public void showdown() {
+        if (httpclient != null) {
+            try {
+                //httpclient.getConnectionManager().shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     protected Integer doInBackground(String... params) {
         // 取得默认的HttpClient
-        HttpClient httpclient = new DefaultHttpClient();
+        httpclient = new DefaultHttpClient();
         try {
             // 设置字符集
             HttpEntity httpentity = null;
@@ -55,7 +67,8 @@ public class HttpCommunicateTask extends AsyncTask<String, Integer, Integer> {
             // 请求httpRequest
             httpRequest.setEntity(httpentity);
 
-            LogUtils.d(TAG, "Send HTTP request!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            LogUtils.d(TAG,
+                    "Send HTTP request!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
             // 取得HttpResponse
             HttpResponse httpResponse = httpclient.execute(httpRequest);
@@ -76,6 +89,9 @@ public class HttpCommunicateTask extends AsyncTask<String, Integer, Integer> {
             Log.e(TAG, "", e);
             sendMessage(Utils.HANDLE_CONNECTION_FAIL, null, handler);
         }
+
+        LogUtils.d(TAG, "quit task!");
+
         return null;
     }
 
@@ -117,6 +133,8 @@ public class HttpCommunicateTask extends AsyncTask<String, Integer, Integer> {
         if (object != null) {
             LogUtils.d(TAG, " obj = " + object.toString());
         }
+        handler.removeMessages(what);
+
         Message msg = handler.obtainMessage();
         msg.what = what;
         msg.obj = object;

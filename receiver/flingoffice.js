@@ -20,11 +20,9 @@ var fling = window.fling || {};
 
     console.log('********FlingOffice********');
 
-    var channelId = guid();
+    this.receiverDaemon = new ReceiverManagerWrapper("~flingoffice");
 
-    this.receiverDaemon = new ReceiverDaemon("~browser");
-
-    var channel = this.receiverDaemon.createMessageChannel("ws");
+    var channel = this.receiverDaemon.createMessageBus("urn:x-cast:com.infthink.cast.demo.office");
 
     //start Receiver Daemon
     this.receiverDaemon.open();
@@ -32,25 +30,9 @@ var fling = window.fling || {};
      /*
       * Create MessageChannel Obejct
       **/
-    channel.on("message", function(senderId, messageType, message) {
-        console.info("channel message ", senderId, messageType, message);
-         switch (messageType) {
-             case "senderConnected":
-             case "senderDisconnected":
-                break;
-             case "message":
-                var messageData = JSON.parse(message.data);
-                var namespace = messageData.namespace;
-                console.info("namespace:", namespace);
-                if (namespace == "urn:x-cast:com.infthink.cast.demo.office") {
-                    var data = JSON.parse(messageData.data);
-                    ("onMessage" in self)&&self.onMessage(senderId, data);
-                } else {
-                    console.info("3 namespace:", namespace);
-                }
-                break;
-         }
-
+    channel.on("message", function(senderId, message) {
+        var data = JSON.parse(message);
+        ("onMessage" in self)&&self.onMessage(senderId, data);
     });
   }
 
