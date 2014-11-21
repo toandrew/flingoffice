@@ -22,7 +22,7 @@ public class Utils {
 
     public static String RESPONSE_JSON_RESULT_KEY = "result";
 
-    public static final String KEY_HTTP_BASE_URL = "http://128.199.245.85:8765/";
+    public static final String KEY_HTTP_BASE_URL = "http://castapp.infthink.com:8765/";
 
     public static final int HANDLE_COMMUNICATION_RESPONSE_BODY_ENTITY = 0;
 
